@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Soft Landing — A quiet corner for loud minds</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Satoshi:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f2ece1;
+    --bg-soft: #ebe3d4;
+    --ink: #2a2a2a;
+    --ink-soft: #5a5550;
+    --sage: #8aa48a;
+    --matcha: #b8c9a8;
+    --clay: #c47a5a;
+    --terracotta: #b85c3c;
+    --line: rgba(42, 42, 42, 0.12);
+    --shadow: 0 8px 40px rgba(42, 42, 42, 0.08);
+    --radius: 18px;
+    --ease: cubic-bezier(0.4, 0.0, 0.2, 1);
+  }
+
+  html[data-theme="dim"] {
+    --bg: #1a1d2e;
+    --bg-soft: #232738;
+    --ink: #e8e2d4;
+    --ink-soft: #a8a090;
+    --sage: #7a9078;
+    --matcha: #8fa47e;
+    --clay: #c98a6a;
+    --terracotta: #d87a5a;
+    --line: rgba(232, 226, 212, 0.1);
+    --shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Satoshi', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-weight: 300;
+    line-height: 1.65;
+    letter-spacing: 0.01em;
+    min-height: 100vh;
+    transition: background 1.2s var(--ease), color 1.2s var(--ease);
+    overflow-x: hidden;
+  }
+
+  /* Film grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    mix-blend-mode: multiply;
+  }
+
+  html[data-theme="dim"] body::before { opacity: 0.12; mix-blend-mode: screen; }
+
+  h1, h2, h3 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+
+  /* Layout */
+  .shell {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  header.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0 3rem;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 3rem;
+  }
+
+  .brand {
+    font-family: 'Fraunces', serif;
+    font-size: 1.4rem;
+    font-style: italic;
+    color: var(--ink);
+  }
+
+  .top-controls { display: flex; gap: 1.5rem; align-items: center; }
+
+  nav.main-nav {
+    display: flex;
+    gap: 1.8rem;
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+  }
+  nav.main-nav a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    transition: color 0.4s var(--ease);
+    cursor: pointer;
+  }
+  nav.main-nav a:hover, nav.main-nav a.active { color: var(--ink); }
+
+  .dim-toggle {
+    background: none;
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.4s var(--ease);
+  }
+  .dim-toggle:hover { color: var(--ink); border-color: var(--ink-soft); }
+
+  /* Sections */
+  section.view {
+    display: none;
+    animation: fadeIn 1.4s var(--ease);
+  }
+  section.view.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* FOYER */
+  .foyer {
+    text-align: center;
+    padding: 3rem 0 4rem;
+  }
+
+  .breath-wrap {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0 3rem;
+  }
+
+  .breath {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, var(--matcha), var(--sage));
+    opacity: 0.75;
+    animation: breathe 8s ease-in-out infinite;
+    filter: blur(1px);
+  }
+
+  @keyframes breathe {
+    0%, 100% { transform: scale(0.7); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.85; }
+  }
+
+  .breath-label {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    margin-top: 1rem;
+    min-height: 1.5em;
+  }
+
+  .foyer h1 {
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    margin-bottom: 1rem;
+    font-weight: 300;
+  }
+  .foyer h1 em { color: var(--terracotta); font-style: italic; }
+
+  .foyer .tagline {
+    color: var(--ink-soft);
+    font-size: 1.1rem;
+    max-width: 500px;
+    margin: 0 auto 3rem;
+  }
+
+  .daily-prompt {
+    background: var(--bg-soft);
+    border-radius: var(--radius);
+    padding: 2.5rem 2rem;
+    max-width: 620px;
+    margin: 0 auto;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--line);
+  }
+
+  .daily-prompt .label {
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 1rem;
+  }
+
+  .daily-prompt p {
+    font-family: 'Fraunces', serif;
+    font-size: 1.35rem;
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  /* COMPASS */
+  .compass-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.2rem;
+    margin-top: 2rem;
+  }
+
+  .compass-card {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 2rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.5s var(--ease);
+  }
+  .compass-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow);
+    border-color: var(--sage);
+  }
+
+  .compass-card .icon {
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+    opacity: 0.7;
+  }
+
+  .compass-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .compass-card p {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+
+  /* CHECK-IN */
+  .checkin {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 1rem 0;
+  }
+
+  .checkin-step {
+    margin-bottom: 3rem;
+  }
+
+  .checkin-step .step-label {
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 0.8rem;
+  }
+
+  .checkin-step h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    font-weight: 300;
+  }
+
+  .weather-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+  }
+
+  .weather-opt {
+    background: var(--bg-soft);
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.2rem;
+    cursor: pointer;
+    transition: all 0.4s var(--ease);
+    text-align: left;
+    font-family: inherit;
+    color: var(--ink);
+  }
+  .weather-opt:hover { border-color: var(--sage); }
+  .weather-opt.selected {
+    border-color: var(--terracotta);
+    background: rgba(196, 122, 90, 0.08);
+  }
+
+  .weather-opt .w-icon { font-size: 1.6rem; margin-bottom: 0.4rem; }
+  .weather-opt .w-name { font-family: 'Fraunces', serif; font-size: 1.1rem; }
+  .weather-opt .w-desc { font-size: 0.85rem; color: var(--ink-soft); margin-top: 0.2rem; }
+
+  .battery-wrap {
+    background: var(--bg-soft);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    border: 1px solid var(--line);
+  }
+
+  .battery-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    margin-bottom: 1rem;
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background: var(--line);
+    border-radius: 999px;
+    outline: none;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    background: var(--terracotta);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(184, 92, 60, 0.3);
+    transition: transform 0.3s var(--ease);
+  }
+  input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+  input[type="range"]::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    background: var(--terracotta);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+  }
+
+  .response-box {
+    margin-top: 2rem;
+    padding: 1.8rem;
+    background: var(--bg-soft);
+    border-left: 3px solid var(--sage);
+    border-radius: var(--radius);
+    font-family: 'Fraunces', serif;
+    font-size: 1.15rem;
+    font-style: italic;
+    line-height: 1.6;
+    opacity: 0;
+    transition: opacity 1s var(--ease);
+  }
+  .response-box.show { opacity: 1; }
+
+  /* JOURNAL */
+  .journal-wrap { max-width: 720px; margin: 0 auto; }
+
+  .journal-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .journal-tab {
+    background: none;
+    border: none;
+    padding: 0.8rem 1.2rem;
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s var(--ease);
+  }
+  .journal-tab.active {
+    color: var(--ink);
+    border-bottom-color: var(--terracotta);
+  }
+
+  .journal-pane { display: none; }
+  .journal-pane.active { display: block; animation: fadeIn 0.8s var(--ease); }
+
+  .brain-dump-area {
+    position: relative;
+    min-height: 280px;
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+  }
+
+  .brain-dump-area textarea {
+    width: 100%;
+    min-height: 220px;
+    background: transparent;
+    border: none;
+    resize: none;
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem;
+    color: var(--ink);
+    outline: none;
+    line-height: 1.7;
+  }
+  .brain-dump-area textarea::placeholder { color: var(--ink-soft); font-style: italic; }
+
+  .dissolve-word {
+    position: absolute;
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem;
+    color: var(--ink-soft);
+    pointer-events: none;
+    animation: dissolve 3s var(--ease) forwards;
+  }
+
+  @keyframes dissolve {
+    0% { opacity: 1; transform: translateY(0) rotate(0deg); }
+    100% { opacity: 0; transform: translateY(-120px) rotate(12deg); }
+  }
+
+  .journal-actions {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 1rem;
+    justify-content: flex-end;
+  }
+
+  .btn {
+    background: none;
+    border: 1px solid var(--line);
+    color: var(--ink);
+    padding: 0.7rem 1.4rem;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.4s var(--ease);
+  }
+  .btn:hover { border-color: var(--ink-soft); background: var(--bg-soft); }
+
+  .btn-primary {
+    background: var(--terracotta);
+    color: #fff;
+    border-color: var(--terracotta);
+  }
+  .btn-primary:hover {
+    background: var(--clay);
+    border-color: var(--clay);
+    color: #fff;
+  }
+
+  .micro-prompts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .micro-prompt {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.2rem 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.4s var(--ease);
+  }
+  .micro-prompt:hover { border-color: var(--sage); }
+
+  .micro-prompt .prompt-text {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    flex: 1;
+    font-size: 1.05rem;
+  }
+
+  .micro-prompt input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line);
+    padding: 0.3rem 0;
+    font-family: inherit;
+    color: var(--ink);
+    outline: none;
+    font-size: 1rem;
+  }
+  .micro-prompt input:focus { border-bottom-color: var(--terracotta); }
+
+  /* LANTERN */
+  .lantern-wrap { max-width: 620px; margin: 0 auto; }
+
+  .lantern-card {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 2.5rem 2rem;
+    text-align: center;
+  }
+
+  .lantern-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    animation: glow 3s ease-in-out infinite;
+    display: inline-block;
+  }
+
+  @keyframes glow {
+    0%, 100% { filter: drop-shadow(0 0 8px rgba(196, 122, 90, 0.4)); }
+    50% { filter: drop-shadow(0 0 20px rgba(196, 122, 90, 0.7)); }
+  }
+
+  .lantern-card h2 {
+    font-size: 1.8rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .lantern-card p {
+    color: var(--ink-soft);
+    margin-bottom: 2rem;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .lantern-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+
+  .lantern-opt {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1rem 1.2rem;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.4s var(--ease);
+    font-family: inherit;
+    color: var(--ink);
+  }
+  .lantern-opt:hover { border-color: var(--terracotta); transform: translateX(4px); }
+  .lantern-opt .opt-title { font-family: 'Fraunces', serif; font-size: 1.05rem; }
+  .lantern-opt .opt-desc { font-size: 0.85rem; color: var(--ink-soft); margin-top: 0.2rem; }
+
+  .waiting-room {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: var(--bg);
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    display: none;
+    animation: fadeIn 1s var(--ease);
+  }
+  .waiting-room.show { display: block; }
+
+  .kettle {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 1rem;
+    border: 2px solid var(--clay);
+    border-radius: 50%;
+    position: relative;
+    animation: boil 1.5s ease-in-out infinite;
+  }
+  @keyframes boil {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+  }
+
+  .waiting-room p {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    color: var(--ink-soft);
+    font-size: 1rem;
+  }
+
+  /* RED THREAD - Crisis */
+  .red-thread {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    background: var(--terracotta);
+    color: #fff;
+    border: none;
+    padding: 0.9rem 1.3rem;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(184, 92, 60, 0.3);
+    z-index: 500;
+    transition: all 0.4s var(--ease);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .red-thread:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 28px rgba(184, 92, 60, 0.45);
+  }
+
+  .crisis-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(26, 29, 46, 0.85);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 900;
+    padding: 1.5rem;
+  }
+  .crisis-modal.show { display: flex; animation: fadeIn 0.4s var(--ease); }
+
+  .crisis-card {
+    background: #fff;
+    color: #1a1d2e;
+    border-radius: var(--radius);
+    padding: 2.5rem;
+    max-width: 480px;
+    width: 100%;
+  }
+
+  .crisis-card h2 {
+    color: #b85c3c;
+    font-size: 1.6rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .crisis-card p { margin-bottom: 1.5rem; line-height: 1.6; }
+
+  .crisis-link {
+    display: block;
+    background: #b85c3c;
+    color: #fff;
+    text-decoration: none;
+    padding: 1rem;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 1.1rem;
+    margin-bottom: 0.6rem;
+    transition: background 0.3s;
+  }
+  .crisis-link:hover { background: #9a4a2e; }
+
+  .crisis-close {
+    margin-top: 1rem;
+    background: none;
+    border: none;
+    color: #5a5550;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9rem;
+  }
+
+  footer {
+    margin-top: 5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 0.88rem;
+    font-style: italic;
+    font-family: 'Fraunces', serif;
+  }
+
+  @media (max-width: 640px) {
+    nav.main-nav { display: none; }
+    .weather-grid { grid-template-columns: 1fr; }
+    .shell { padding: 1.5rem 1rem 3rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <header class="top">
+    <div class="brand">The Soft Landing</div>
+    <div class="top-controls">
+      <nav class="main-nav">
+        <a data-view="foyer" class="active">Foyer</a>
+        <a data-view="compass">Compass</a>
+        <a data-view="checkin">Check-in</a>
+        <a data-view="journal">Quiet Page</a>
+        <a data-view="lantern">Lantern</a>
+      </nav>
+      <button class="dim-toggle" id="dimToggle">Dim the lights</button>
+    </div>
+  </header>
+
+  <!-- FOYER -->
+  <section class="view active" id="view-foyer">
+    <div class="foyer">
+      <div class="breath-wrap">
+        <div>
+          <div class="breath"></div>
+          <div class="breath-label" id="breathLabel">Breathe in...</div>
+        </div>
+      </div>
+      <h1>A quiet corner for <em>loud minds</em>.</h1>
+      <p class="tagline">You don't have to be fixed today. You don't have to optimize your healing. In here, the only requirement is that you exist.</p>
+
+      <div class="daily-prompt">
+        <div class="label">Today's gentle question</div>
+        <p id="dailyPrompt">It's mid-summer, but you're feeling the weight of the year. What is one small thing you can put down today?</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPASS -->
+  <section class="view" id="view-compass">
+    <h2 style="font-size: 2rem; margin-bottom: 0.5rem;">The Compass</h2>
+    <p style="color: var(--ink-soft); margin-bottom: 1rem;">Find what you need by how you feel, not by what's wrong with you.</p>
+
+    <div class="compass-grid">
+      <div class="compass-card">
+        <div class="icon">🌫️</div>
+        <h3>When the world is too loud</h3>
+        <p>Sensory grounding, noise-canceling soundscapes, and permission to step back.</p>
+      </div>
+      <div class="compass-card">
+        <div class="icon">🛏️</div>
+        <h3>When you can't get out of bed</h3>
+        <p>Micro-steps, grace-based affirmations, and low-energy ways to care for yourself.</p>
+      </div>
+      <div class="compass-card">
+        <div class="icon">🌌</div>
+        <h3>When you feel entirely alone</h3>
+        <p>Connection exercises, perspective shifts, and the Hearth — a room where others sit with you.</p>
+      </div>
+      <div class="compass-card">
+        <div class="icon">🔥</div>
+        <h3>When you need to be angry</h3>
+        <p>Somatic release, journaling prompts for frustration, and a safe place to let it out.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHECK-IN -->
+  <section class="view" id="view-checkin">
+    <div class="checkin">
+      <div class="checkin-step">
+        <div class="step-label">Step 1 of 2</div>
+        <h2>What's your internal weather?</h2>
+        <div class="weather-grid" id="weatherGrid">
+          <button class="weather-opt" data-weather="clear">
+            <div class="w-icon">☀️</div>
+            <div class="w-name">Clear & Warm</div>
+            <div class="w-desc">Grounded, okay</div>
+          </button>
+          <button class="weather-opt" data-weather="fog">
+            <div class="w-icon">🌫️</div>
+            <div class="w-name">Foggy</div>
+            <div class="w-desc">Disconnected, numb</div>
+          </button>
+          <button class="weather-opt" data-weather="overcast">
+            <div class="w-icon">☁️</div>
+            <div class="w-name">Overcast</div>
+            <div class="w-desc">Heavy, low energy</div>
+          </button>
+          <button class="weather-opt" data-weather="storm">
+            <div class="w-icon">⛈️</div>
+            <div class="w-name">Stormy</div>
+            <div class="w-desc">Anxious, overwhelmed</div>
+          </button>
+        </div>
+      </div>
+
+      <div class="checkin-step">
+        <div class="step-label">Step 2 of 2</div>
+        <h2>How much bandwidth do you have today?</h2>
+        <div class="battery-wrap">
+          <div class="battery-labels">
+            <span>Empty</span>
+            <span id="batteryValue">50%</span>
+            <span>Full</span>
+          </div>
+          <input type="range" min="0" max="100" value="50" id="batterySlider">
+        </div>
+      </div>
+
+      <div class="response-box" id="responseBox"></div>
+    </div>
+  </section>
+
+  <!-- JOURNAL -->
+  <section class="view" id="view-journal">
+    <div class="journal-wrap">
+      <h2 style="font-size: 2rem; margin-bottom: 0.5rem;">The Quiet Page</h2>
+      <p style="color: var(--ink-soft); margin-bottom: 2rem;">Write when you can. Let go when you need to.</p>
+
+      <div class="journal-tabs">
+        <button class="journal-tab active" data-pane="braindump">Brain Dump</button>
+        <button class="journal-tab" data-pane="micro">Low-Battery Prompts</button>
+        <button class="journal-tab" data-pane="sensory">Sensory Log</button>
+      </div>
+
+      <div class="journal-pane active" id="pane-braindump">
+        <p style="color: var(--ink-soft); margin-bottom: 1rem; font-style: italic;">Pour it out. When you're done, let it dissolve. Nothing here is saved.</p>
+        <div class="brain-dump-area" id="brainDumpArea">
+          <textarea id="brainDumpText" placeholder="Everything you're carrying right now..."></textarea>
+        </div>
+        <div class="journal-actions">
+          <button class="btn" id="clearDump">Clear</button>
+          <button class="btn btn-primary" id="letGo">Let it go</button>
+        </div>
+      </div>
+
+      <div class="journal-pane" id="pane-micro">
+        <div class="micro-prompts">
+          <div class="micro-prompt">
+            <span class="prompt-text">Right now, my body feels...</span>
+            <input type="text" placeholder=" ">
+          </div>
+          <div class="micro-prompt">
+            <span class="prompt-text">One thing I don't have to do today is...</span>
+            <input type="text" placeholder=" ">
+          </div>
+          <div class="micro-prompt">
+            <span class="prompt-text">If my anxiety had a voice, it would say...</span>
+            <input type="text" placeholder=" ">
+          </div>
+          <div class="micro-prompt">
+            <span class="prompt-text">But the truth is...</span>
+            <input type="text" placeholder=" ">
+          </div>
+        </div>
+      </div>
+
+      <div class="journal-pane" id="pane-sensory">
+        <p style="color: var(--ink-soft); margin-bottom: 1.5rem; font-style: italic;">Come back to the room. Name what's here.</p>
+        <div class="micro-prompts">
+          <div class="micro-prompt">
+            <span class="prompt-text">One thing I can see...</span>
+            <input type="text" placeholder=" ">
+          </div>
+          <div class="micro-prompt">
+            <span class="prompt-text">One thing I can hear...</span>
+            <input type="text" placeholder=" ">
+          </div>
+          <div class="micro-prompt">
+            <span class="prompt-text">One thing I can physically feel...</span>
+            <input type="text" placeholder=" ">
+          </div>
+          <div class="micro-prompt">
+            <span class="prompt-text">One thing I can smell or taste...</span>
+            <input type="text" placeholder=" ">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LANTERN -->
+  <section class="view" id="view-lantern">
+    <div class="lantern-wrap">
+      <div class="lantern-card">
+        <div class="lantern-icon">🏮</div>
+        <h2>Someone is here.</h2>
+        <p>Trained peer supporters — not therapists, not bots — ready to sit with you. No judgment. No performance.</p>
+
+        <div class="lantern-options">
+          <button class="lantern-opt" id="sitWithMe">
+            <div class="opt-title">Sit with me now</div>
+            <div class="opt-desc">Live text chat · usually under 3 min</div>
+          </button>
+          <button class="lantern-opt">
+            <div class="opt-title">Slow chat</div>
+            <div class="opt-desc">Write when you want. A reply within hours.</div>
+          </button>
+          <button class="lantern-opt">
+            <div class="opt-title">Voice note exhale</div>
+            <div class="opt-desc">Say it out loud. We'll listen.</div>
+          </button>
+        </div>
+
+        <div class="waiting-room" id="waitingRoom">
+          <div class="kettle"></div>
+          <p>Someone is finishing a conversation and will be with you shortly. While you wait, take a slow breath. You are not a burden.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    You are allowed to just exist today. — The Soft Landing
+  </footer>
+</div>
+
+<!-- RED THREAD -->
+<button class="red-thread" id="redThread">
+  <span>🧵</span> Need a human right now?
+</button>
+
+<!-- CRISIS MODAL -->
+<div class="crisis-modal" id="crisisModal">
+  <div class="crisis-card">
+    <h2>You don't have to carry this alone.</h2>
+    <p>If you're in crisis or thinking about hurting yourself, please reach out. Real humans are waiting, 24/7, and it doesn't have to be "bad enough" to call.</p>
+    <a class="crisis-link" href="tel:988">📞 Call or text 988 (US/CA)</a>
+    <a class="crisis-link" href="sms:85258">💬 Text HOME to 85258 (Crisis Text Line)</a>
+    <a class="crisis-link" href="tel:116123">🌍 Samaritans: 116 123 (UK/IE)</a>
+    <button class="crisis-close" id="crisisClose">Close</button>
+  </div>
+</div>
+
+<script>
+  // --- View navigation ---
+  const navLinks = document.querySelectorAll('nav.main-nav a');
+  const views = document.querySelectorAll('.view');
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      const target = link.dataset.view;
+      navLinks.forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+      views.forEach(v => v.classList.remove('active'));
+      document.getElementById('view-' + target).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  // --- Dim the lights ---
+  const dimToggle = document.getElementById('dimToggle');
+  dimToggle.addEventListener('click', () => {
+    const html = document.documentElement;
+    const isDim = html.dataset.theme === 'dim';
+    if (isDim) {
+      html.removeAttribute('data-theme');
+      dimToggle.textContent = 'Dim the lights';
+    } else {
+      html.dataset.theme = 'dim';
+      dimToggle.textContent = 'Bring back the light';
+    }
+  });
+
+  // --- Breathing label ---
+  const breathLabel = document.getElementById('breathLabel');
+  const breathCycle = ['Breathe in...', 'Hold gently...', 'Breathe out...', 'Rest here...'];
+  let breathIdx = 0;
+  setInterval(() => {
+    breathIdx = (breathIdx + 1) % breathCycle.length;
+    breathLabel.style.opacity = 0;
+    setTimeout(() => {
+      breathLabel.textContent = breathCycle[breathIdx];
+      breathLabel.style.opacity = 1;
+    }, 400);
+  }, 2000);
+  breathLabel.style.transition = 'opacity 0.6s ease';
+
+  // --- Daily prompts ---
+  const prompts = [
+    "It's mid-summer, but you're feeling the weight of the year. What is one small thing you can put down today?",
+    "If your energy were a currency, what would you refuse to spend it on today?",
+    "What is something you're carrying that isn't actually yours to hold?",
+    "Name one small kindness you can offer yourself in the next hour.",
+    "What would today look like if you stopped trying to earn rest?",
+    "Who or what made you feel a little lighter this week?",
+    "What is your body trying to tell you right now?"
+  ];
+  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0)) / 86400000);
+  document.getElementById('dailyPrompt').textContent = prompts[dayOfYear % prompts.length];
+
+  // --- Check-in ---
+  let selectedWeather = null;
+  const weatherOpts = document.querySelectorAll('.weather-opt');
+  const batterySlider = document.getElementById('batterySlider');
+  const batteryValue = document.getElementById('batteryValue');
+  const responseBox = document.getElementById('responseBox');
+
+  weatherOpts.forEach(opt => {
+    opt.addEventListener('click', () => {
+      weatherOpts.forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      selectedWeather = opt.dataset.weather;
+      updateResponse();
+    });
+  });
+
+  batterySlider.addEventListener('input', () => {
+    batteryValue.textContent = batterySlider.value + '%';
+    updateResponse();
+  });
+
+  function updateResponse() {
+    if (!selectedWeather) return;
+    const battery = parseInt(batterySlider.value);
+    let msg = '';
+
+    if (selectedWeather === 'storm' && battery < 30) {
+      msg = "It's a heavy day, and your tank is nearly empty. We've dimmed the lights and hidden the heavy reading. Here is permission to do the bare minimum. You don't have to earn rest.";
+    } else if (selectedWeather === 'storm') {
+      msg = "The weather inside is rough. Try the Brain Dump in the Quiet Page — let it dissolve. You don't have to fix it, just move it through you.";
+    } else if (selectedWeather === 'fog') {
+      msg = "Foggy days are okay. Try the Sensory Log — name five things around you. Come back to the room, one sense at a time.";
+    } else if (selectedWeather === 'overcast' && battery < 40) {
+      msg = "Heavy and low — that's a lot. One small thing is enough today. Drink water. Sit by a window. That counts.";
+    } else if (selectedWeather === 'overcast') {
+      msg = "Overcast skies pass. Be gentle with yourself. The Quiet Page has some low-battery prompts if you want them.";
+    } else if (selectedWeather === 'clear') {
+      msg = "A clear day. Notice it. Let it fill you up a little. You've earned this softness.";
+    }
+
+    if (msg) {
+      responseBox.textContent = msg;
+      responseBox.classList.add('show');
+    }
+  }
+
+  // --- Journal tabs ---
+  const journalTabs = document.querySelectorAll('.journal-tab');
+  const journalPanes = document.querySelectorAll('.journal-pane');
+  journalTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      journalTabs.forEach(t => t.classList.remove('active'));
+      journalPanes.forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('pane-' + tab.dataset.pane).classList.add('active');
+    });
+  });
+
+  // --- Brain dump dissolve ---
+  const brainDumpArea = document.getElementById('brainDumpArea');
+  const brainDumpText = document.getElementById('brainDumpText');
+
+  document.getElementById('letGo').addEventListener('click', () => {
+    const text = brainDumpText.value.trim();
+    if (!text) return;
+
+    const words = text.split(/\s+/);
+    const rect = brainDumpArea.getBoundingClientRect();
+
+    words.forEach((word, i) => {
+      setTimeout(() => {
+        const span = document.createElement('span');
+        span.className = 'dissolve-word';
+        span.textContent = word;
+        span.style.left = (Math.random() * 70 + 10) + '%';
+        span.style.top = (Math.random() * 60 + 20) + '%';
+        brainDumpArea.appendChild(span);
+        setTimeout(() => span.remove(), 3000);
+      }, i * 80);
+    });
+
+    setTimeout(() => {
+      brainDumpText.value = '';
+    }, words.length * 80 + 200);
+  });
+
+  document.getElementById('clearDump').addEventListener('click', () => {
+    brainDumpText.value = '';
+  });
+
+  // --- Lantern ---
+  document.getElementById('sitWithMe').addEventListener('click', () => {
+    document.getElementById('waitingRoom').classList.add('show');
+  });
+
+  // --- Red Thread (crisis) ---
+  document.getElementById('redThread').addEventListener('click', () => {
+    document.getElementById('crisisModal').classList.add('show');
+  });
+  document.getElementById('crisisClose').addEventListener('click', () => {
+    document.getElementById('crisisModal').classList.remove('show');
+  });
+  document.getElementById('crisisModal').addEventListener('click', (e) => {
+    if (e.target.id === 'crisisModal') {
+      document.getElementById('crisisModal').classList.remove('show');
+    }
+  });
+</script>
+
+</body>
+</html>
